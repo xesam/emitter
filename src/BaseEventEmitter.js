@@ -13,9 +13,6 @@
 const EmitterSubscription = require('EmitterSubscription');
 const EventSubscriptionVendor = require('EventSubscriptionVendor');
 
-const invariant = require('invariant');
-const emptyFunction = require('emptyFunction');
-
 /**
  * @class BaseEventEmitter
  * @description
@@ -70,7 +67,7 @@ class BaseEventEmitter {
      *   listener
      */
     once(eventType, listener, context) {
-        var emitter = this;
+        const emitter = this;
         return this.addListener(eventType, function () {
             emitter.removeCurrentListener();
             listener.apply(context, arguments);
@@ -99,21 +96,21 @@ class BaseEventEmitter {
      * @throws {Error} When called not during an eventing cycle
      *
      * @example
-     *   var subscription = emitter.addListenerMap({
-     *     someEvent: function(data, event) {
+     *   var subscription = emitter.addListener(
+     *    'someEvent',
+     *    function(data, event) {
      *       console.log(data);
      *       emitter.removeCurrentListener();
      *     }
-     *   });
+     *   );
      *
      *   emitter.emit('someEvent', 'abc'); // logs 'abc'
      *   emitter.emit('someEvent', 'def'); // does not log anything
      */
     removeCurrentListener() {
-        invariant(
-            !!this._currentSubscription,
-            'Not in an emitting cycle; there is no current subscription',
-        );
+        if (!this._currentSubscription) {
+            throw Error('Not in an emitting cycle; there is no current subscription');
+        }
         this._subscriber.removeSubscription(this._currentSubscription);
     }
 
@@ -125,14 +122,13 @@ class BaseEventEmitter {
      * @return {array}
      */
     listeners(eventType) /* TODO<EventSubscription> */ {
-        var subscriptions = this._subscriber.getSubscriptionsForType(eventType);
-        return subscriptions
-            ? subscriptions
-                .filter(emptyFunction.thatReturnsTrue)
-                .map(function (subscription) {
-                    return subscription.listener;
-                })
-            : [];
+        const subscriptions = this._subscriber.getSubscriptionsForType(eventType);
+        /**
+         * 原始版本返回的是subscription.listener，
+         * 但subscription.listener本身就有可能不是最初传进去的 listener，
+         * 因此，返回 listener 的意义也不是很大。
+         * */
+        return subscriptions ? subscriptions.filter(() => true) : [];//把被 remove 的订阅去掉，但是此处依赖了 EventSubscriptionVendor 的实现，不太合适。
     }
 
     /**
@@ -150,12 +146,12 @@ class BaseEventEmitter {
      *   emitter.emit('someEvent', 'abc'); // logs 'abc'
      */
     emit(eventType) {
-        var subscriptions = this._subscriber.getSubscriptionsForType(eventType);
+        const subscriptions = this._subscriber.getSubscriptionsForType(eventType);
         if (subscriptions) {
-            var keys = Object.keys(subscriptions);
-            for (var ii = 0; ii < keys.length; ii++) {
-                var key = keys[ii];
-                var subscription = subscriptions[key];
+            const keys = Object.keys(subscriptions);
+            for (let ii = 0; ii < keys.length; ii++) {
+                const key = keys[ii];
+                const subscription = subscriptions[key];
                 // The subscription may have been removed during this event loop.
                 if (subscription) {
                     this._currentSubscription = subscription;
@@ -179,7 +175,7 @@ class BaseEventEmitter {
      * @param {*} Arbitrary arguments to be passed to each registered listener
      */
     __emitToSubscription(subscription, eventType) {
-        var args = Array.prototype.slice.call(arguments, 2);
+        const args = Array.prototype.slice.call(arguments, 2);
         subscription.listener.apply(subscription.context, args);
     }
 }

@@ -16,8 +16,8 @@ describe('BaseEventEmitter', function () {
         'notifies listener when told to emit an event which that listener has ' +
         'registered for',
         function () {
-            var emitter = new BaseEventEmitter();
-            var callback = jest.fn();
+            const emitter = new BaseEventEmitter();
+            const callback = jest.fn();
 
             emitter.addListener('type1', callback);
 
@@ -28,13 +28,13 @@ describe('BaseEventEmitter', function () {
     );
 
     it('allows for the passing of the context when handling events', function () {
-        var emitter = new BaseEventEmitter();
-        var calledContext;
-        var callback = jest.fn();
+        const emitter = new BaseEventEmitter();
+        let calledContext;
+        const callback = jest.fn();
         callback.mockImplementation(function () {
             calledContext = this;
         });
-        var context = {};
+        const context = {};
 
         emitter.addListener('type1', callback, context);
 
@@ -48,9 +48,9 @@ describe('BaseEventEmitter', function () {
         'notifies multiple listeners when told to emit an event which multiple ' +
         'listeners are registered for',
         function () {
-            var emitter = new BaseEventEmitter();
-            var callback1 = jest.fn();
-            var callback2 = jest.fn();
+            const emitter = new BaseEventEmitter();
+            const callback1 = jest.fn();
+            const callback2 = jest.fn();
 
             emitter.addListener('type1', callback1);
             emitter.addListener('type1', callback2);
@@ -63,8 +63,8 @@ describe('BaseEventEmitter', function () {
     );
 
     it('does not notify events of different types', function () {
-        var emitter = new BaseEventEmitter();
-        var callback = jest.fn();
+        const emitter = new BaseEventEmitter();
+        const callback = jest.fn();
 
         emitter.addListener('type1', callback);
 
@@ -74,8 +74,8 @@ describe('BaseEventEmitter', function () {
     });
 
     it('does not notify of events after all listeners are removed', function () {
-        var emitter = new BaseEventEmitter();
-        var callback = jest.fn();
+        const emitter = new BaseEventEmitter();
+        const callback = jest.fn();
 
         emitter.addListener('type1', callback);
         emitter.removeAllListeners();
@@ -86,10 +86,10 @@ describe('BaseEventEmitter', function () {
     });
 
     it('does not notify the listener of events after it is removed', function () {
-        var emitter = new BaseEventEmitter();
-        var callback = jest.fn();
+        const emitter = new BaseEventEmitter();
+        const callback = jest.fn();
 
-        var subscription = emitter.addListener('type1', callback);
+        const subscription = emitter.addListener('type1', callback);
         subscription.remove();
 
         emitter.emit('type1');
@@ -101,9 +101,9 @@ describe('BaseEventEmitter', function () {
         'invokes only the listeners registered at the time the event was ' +
         'emitted, even if more were added',
         function () {
-            var emitter = new BaseEventEmitter();
-            var callback1 = jest.fn();
-            var callback2 = jest.fn();
+            const emitter = new BaseEventEmitter();
+            const callback1 = jest.fn();
+            const callback2 = jest.fn();
 
             callback1.mockImplementation(function () {
                 emitter.addListener('type1', callback2);
@@ -122,16 +122,16 @@ describe('BaseEventEmitter', function () {
         'does not invoke listeners registered at the time the event was ' +
         'emitted but later removed during the event loop',
         function () {
-            var emitter = new BaseEventEmitter();
-            var callback1 = jest.fn();
-            var callback2 = jest.fn();
+            const emitter = new BaseEventEmitter();
+            const callback1 = jest.fn();
+            const callback2 = jest.fn();
 
             callback1.mockImplementation(function () {
                 subscription.remove();
             });
 
             emitter.addListener('type1', callback1);
-            var subscription = emitter.addListener('type1', callback2);
+            const subscription = emitter.addListener('type1', callback2);
 
             emitter.emit('type1');
 
@@ -144,10 +144,10 @@ describe('BaseEventEmitter', function () {
         'does notify other handlers of events after a particular listener has ' +
         'been removed',
         function () {
-            var emitter = new BaseEventEmitter();
-            var callback = jest.fn();
+            const emitter = new BaseEventEmitter();
+            const callback = jest.fn();
 
-            var subscription = emitter.addListener('type1', function () {
+            const subscription = emitter.addListener('type1', function () {
             });
             emitter.addListener('type1', callback);
             subscription.remove();
@@ -162,8 +162,8 @@ describe('BaseEventEmitter', function () {
         'provides a way to remove the current listener when told to do so in ' +
         'the midst of an emitting cycle',
         function () {
-            var emitter = new BaseEventEmitter();
-            var callback = jest.fn();
+            const emitter = new BaseEventEmitter();
+            const callback = jest.fn();
 
             emitter.addListener('type1', callback);
 
@@ -180,8 +180,8 @@ describe('BaseEventEmitter', function () {
     );
 
     it('provides a way to register a listener that is invoked once', function () {
-        var emitter = new BaseEventEmitter();
-        var callback = jest.fn();
+        const emitter = new BaseEventEmitter();
+        const callback = jest.fn();
 
         emitter.once('type1', callback);
 
@@ -196,7 +196,7 @@ describe('BaseEventEmitter', function () {
         'throws an error when told to remove the current listener when not in ' +
         'an emitting cycle',
         function () {
-            var emitter = new BaseEventEmitter();
+            const emitter = new BaseEventEmitter();
 
             expect(function () {
                 emitter.removeCurrentListener();
@@ -205,51 +205,51 @@ describe('BaseEventEmitter', function () {
     );
 
     it('returns an array of listeners for an event', function () {
-        var emitter = new BaseEventEmitter();
-        var listener1 = function () {
+        const emitter = new BaseEventEmitter();
+        const listener1 = function () {
         };
-        var listener2 = function () {
+        const listener2 = function () {
         };
-        emitter.addListener('type1', listener1);
-        emitter.addListener('type1', listener2);
+        const subscription1 = emitter.addListener('type1', listener1);
+        const subscription2 = emitter.addListener('type1', listener2);
 
-        var listeners = emitter.listeners('type1');
-        expect(listeners.length).toBe(2);
-        expect(listeners).toContain(listener1);
-        expect(listeners).toContain(listener2);
+        const subscriptions = emitter.listeners('type1');
+        expect(subscriptions.length).toBe(2);
+        expect(subscriptions).toContain(subscription1);
+        expect(subscriptions).toContain(subscription2);
     });
 
     it('returns an empty array when there are no listeners', function () {
-        var emitter = new BaseEventEmitter();
+        const emitter = new BaseEventEmitter();
         expect(emitter.listeners('type1').length).toBe(0);
     });
 
     it('returns only the listeners for the registered event', function () {
-        var emitter = new BaseEventEmitter();
-        var listener1 = function () {
+        const emitter = new BaseEventEmitter();
+        const listener1 = function () {
         };
-        var listener2 = function () {
+        const listener2 = function () {
         };
-        emitter.addListener('type1', listener1);
+        const subscription1 = emitter.addListener('type1', listener1);
         emitter.addListener('type2', listener2);
 
-        var listeners = emitter.listeners('type1');
-        expect(listeners.length).toBe(1);
-        expect(listeners).toContain(listener1);
+        const subscriptions = emitter.listeners('type1');
+        expect(subscriptions.length).toBe(1);
+        expect(subscriptions).toContain(subscription1);
     });
 
     it('does not return removed listeners', function () {
-        var emitter = new BaseEventEmitter();
-        var listener1 = function () {
+        const emitter = new BaseEventEmitter();
+        const listener1 = function () {
         };
-        var listener2 = function () {
+        const listener2 = function () {
         };
-        var subscription1 = emitter.addListener('type1', listener1);
-        emitter.addListener('type1', listener2);
+        const subscription1 = emitter.addListener('type1', listener1);
+        const subscription2 = emitter.addListener('type1', listener2);
         subscription1.remove();
 
-        var listeners = emitter.listeners('type1');
-        expect(listeners.length).toBe(1);
-        expect(listeners).toContain(listener2);
+        const subscriptions = emitter.listeners('type1');
+        expect(subscriptions.length).toBe(1);
+        expect(subscriptions).toContain(subscription2);
     });
 });

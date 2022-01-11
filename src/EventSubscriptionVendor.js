@@ -12,8 +12,6 @@
 
 'use strict';
 
-const invariant = require('invariant');
-
 /**
  * EventSubscriptionVendor stores a set of EventSubscriptions that are
  * subscribed to a particular event type.
@@ -30,18 +28,14 @@ class EventSubscriptionVendor {
      * @param {string} eventType
      * @param {EventSubscription} subscription
      */
-    addSubscription(
-        eventType,
-        subscription,
-    ) {
-        invariant(
-            subscription.subscriber === this,
-            'The subscriber of the subscription is incorrectly set.',
-        );
+    addSubscription(eventType, subscription) {
+        if (subscription.subscriber !== this) {
+            throw Error('The subscriber of the subscription is incorrectly set.');
+        }
         if (!this._subscriptionsForType[eventType]) {
             this._subscriptionsForType[eventType] = [];
         }
-        var key = this._subscriptionsForType[eventType].length;
+        const key = this._subscriptionsForType[eventType].length;
         this._subscriptionsForType[eventType].push(subscription);
         subscription.eventType = eventType;
         subscription.key = key;
@@ -69,10 +63,10 @@ class EventSubscriptionVendor {
      * @param {object} subscription
      */
     removeSubscription(subscription) {
-        var eventType = subscription.eventType;
-        var key = subscription.key;
+        const eventType = subscription.eventType;
+        const key = subscription.key;
 
-        var subscriptionsForType = this._subscriptionsForType[eventType];
+        const subscriptionsForType = this._subscriptionsForType[eventType];
         if (subscriptionsForType) {
             delete subscriptionsForType[key];
         }

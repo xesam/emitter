@@ -21,7 +21,6 @@
     "test": "set NODE_ENV=test&jest"
   },
   "dependencies": {
-    "fbjs": "^3.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",
