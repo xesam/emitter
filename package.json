@@ -18,7 +18,7 @@
   "scripts": {
     "build": "gulp build",
     "prepublish": "npm run build",
-    "test": "NODE_ENV=test jest"
+    "test": "set NODE_ENV=test&jest"
   },
   "dependencies": {
     "fbjs": "^3.0.0"

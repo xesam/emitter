@@ -18,23 +18,23 @@
  */
 class EventSubscription {
 
-  /**
-   * @param {EventSubscriptionVendor} subscriber the subscriber that controls
-   *   this subscription.
-   */
-  constructor(subscriber: EventSubscriptionVendor) {
-    this.subscriber = subscriber;
-  }
-
-  /**
-   * Removes this subscription from the subscriber that controls it.
-   */
-  remove() {
-    if (this.subscriber) {
-      this.subscriber.removeSubscription(this);
-      this.subscriber = null;
+    /**
+     * @param {EventSubscriptionVendor} subscriber the subscriber that controls
+     *   this subscription.
+     */
+    constructor(subscriber) {
+        this.subscriber = subscriber;
     }
-  }
+
+    /**
+     * Removes this subscription from the subscriber that controls it.
+     */
+    remove() {
+        if (this.subscriber) {
+            this.subscriber.removeSubscription(this);
+            this.subscriber = null;
+        }
+    }
 }
 
 module.exports = EventSubscription;

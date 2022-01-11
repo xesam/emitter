@@ -12,7 +12,7 @@ const babel = require('@babel/core');
 const babelOpts = require('../babel/default-options');
 
 module.exports = {
-  process: function (src, path) {
-    return babel.transform(src, assign({ filename: path }, babelOpts)).code;
-  },
+    process: function (src, path) {
+        return babel.transform(src, assign({filename: path}, babelOpts)).code;
+    },
 };
