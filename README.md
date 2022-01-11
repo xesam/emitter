@@ -1,4 +1,14 @@
 # EventEmitter
+修改内容：
+0. 去除了源码中的 facebook flow 语法。
+1. 去除了第三方依赖。
+2. BaseEventEmitter#listeners 改为返回 subscription，而不是原本的 listener。
+
+
+
+# 以下是原始文档
+
+# EventEmitter
 
 Facebook's EventEmitter is a simple emitter implementation that prioritizes speed and simplicity. It is conceptually similar to other emitters like Node's EventEmitter, but the precise APIs differ. More complex abstractions like the event systems used on facebook.com and m.facebook.com can be built on top of EventEmitter as well DOM event systems.
 
