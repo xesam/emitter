@@ -19,7 +19,6 @@
 class EventSubscriptionVendor {
     constructor() {
         this._subscriptionsForType = {};
-        this._currentSubscription = null;
     }
 
     /**
