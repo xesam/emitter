@@ -1,10 +1,9 @@
 # EventEmitter
 修改内容：
-0. 去除了源码中的 facebook flow 语法。
-1. 去除了第三方依赖。
-2. BaseEventEmitter#listeners 改为返回 subscription，而不是原本的 listener。
 
-
+1. 去除了源码中的 facebook flow 语法。
+2. 去除了第三方依赖。
+3. BaseEventEmitter#listeners 改为返回 subscription，而不是原本的 listener。
 
 # 以下是原始文档
 
